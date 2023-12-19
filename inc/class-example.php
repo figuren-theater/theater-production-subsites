@@ -2,15 +2,15 @@
 /**
  * Figuren_Theater ...
  *
- * @package figuren-theater/project_urlname
+ * @package figuren-theater/theater-production-subsites
  */
 
-namespace Figuren_Theater\project_name;
+namespace Figuren_Theater\theater_production_subsites;
 
 /**
  * Figuren_Theater ...
  *
- * @package figuren-theater/project_urlname
+ * @package figuren-theater/theater-production-subsites
  */
 class Example {
 
