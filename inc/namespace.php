@@ -1,35 +1,32 @@
 <?php
 /**
- * Figuren_Theater theater_production_subsites.
+ * Figuren_Theater Production_Subsites.
  *
  * @package figuren-theater/theater-production-subsites
  */
 
-namespace Figuren_Theater\theater_production_subsites;
-
-use Altis;
+namespace Figuren_Theater\Production_Subsites;
 
 /**
  * Register module.
  *
  * @return void
  */
-function register() :void {
+function register(): void {
 
-	$default_settings = [
-		'enabled' => true, // Needs to be set.
-	];
-	$options = [
-		'defaults' => $default_settings,
-	];
+	$post_types = Registration\get_post_types();
 
-	Altis\register_module(
-		'theater-production-subsites',
-		DIRECTORY,
-		'theater_production_subsites',
-		$options,
-		__NAMESPACE__ . '\\bootstrap'
-	);
+	if ( empty( $post_types ) ) {
+		return;
+	}
+
+	// \array_map(
+	// 	__NAMESPACE__ . '\\Registration\\add_post_type_supports',
+	// 	$post_types
+	// );
+
+	Block_Loading\bootstrap(); // Should run on init|0 or earlier.
+	// Pattern_Loading\bootstrap(); // Should run on init.
 }
 
 /**
@@ -37,7 +34,7 @@ function register() :void {
  *
  * @return void
  */
-function bootstrap() :void {
+function bootstrap(): void {
 
 	/**
 	 * Automatically load Plugins.
