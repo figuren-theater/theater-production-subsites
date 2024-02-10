@@ -39,12 +39,11 @@ function register_patterns(): void {
 	$block_patterns = apply_filters( 
 		__NAMESPACE__ . '\\register_patterns',
 		[
-			// Important parts of productions.
-			'production-important-metadata',
-
-			// Layouts can be used for Productions Details.
-			'production-page-dark',
-			'production-page-light',
+			// Typical full-page Layouts for typical production-subsites.
+			'production-subsites-copy-paste-facts',
+			'production-subsites-playlist',
+			'production-subsites-playlist-v2',
+			'production-subsites-todo',
 		]
 	);
 
@@ -82,7 +81,7 @@ function register_pattern_category(): void {
 	register_block_pattern_category(
 		'theater',
 		[
-			'label' => __( 'Theater', 'theater-production-blocks' ),
+			'label' => __( 'Theater', 'theater-production-subsites' ),
 		]
 	);
 }

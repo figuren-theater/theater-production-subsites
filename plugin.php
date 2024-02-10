@@ -4,7 +4,7 @@
  *
  * @package           figuren-theater/theater-production-subsites
  * @author            figuren.theater
- * @copyright         2023 figuren.theater
+ * @copyright         2024 figuren.theater
  * @license           GPL-3.0+
  *
  * @wordpress-plugin
@@ -16,7 +16,7 @@
  * Requires PHP:      7.1
  * Author:            figuren.theater
  * Author URI:        https://figuren.theater
- * Text Domain:       figurentheater
+ * Text Domain:       theater-production-subsites
  * Domain Path:       /languages
  * License:           GPL-3.0+
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
@@ -26,6 +26,7 @@
 namespace Figuren_Theater\Production_Subsites;
 
 const DIRECTORY = __DIR__;
+const PT_SLUG   = 'tb_prod_subsite';
 
 
 /**
@@ -33,9 +34,12 @@ const DIRECTORY = __DIR__;
  *
  * @todo Add composer autoloading strategy
  */
+require_once DIRECTORY . '/inc/admin-ui/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/block-loading/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/pattern-loading/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
+require_once DIRECTORY . '/inc/post-type/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/registration/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
+require_once DIRECTORY . '/inc/urls/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 
 add_action( 'init', __NAMESPACE__ . '\\register', 0 );
