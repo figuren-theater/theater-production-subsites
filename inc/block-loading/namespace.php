@@ -9,18 +9,10 @@ namespace Figuren_Theater\Production_Subsites\Block_Loading;
 
 use Figuren_Theater\Production_Subsites;
 use Figuren_Theater\Production_Subsites\Registration;
-use WP_Post_Type;
 use function add_action;
-use function current_user_can;
 use function esc_html;
-use function get_post_types_by_support;
-// use function register_block_type; // TEMP. Disabled !
-use function get_post_type;
-use function get_post_type_object;
 use function load_plugin_textdomain;
 use function plugins_url;
-use function register_block_type;
-use function register_post_meta;
 use function wp_add_inline_script;
 use function wp_enqueue_script;
 use function wp_get_environment_type;
