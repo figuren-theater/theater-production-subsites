@@ -17,8 +17,6 @@ use function add_filter;
 use function add_query_arg;
 use function is_network_admin;
 use function is_user_admin;
-use function is_wp_error;
-
 
 
 /**
@@ -42,7 +40,7 @@ function load_plugin(): void {
 	// and public views.
 	// Not for:
 	// - network-admin views
-	// - user-admin views
+	// - user-admin views.
 	if ( is_network_admin() || is_user_admin() ) {
 		return;
 	}
@@ -50,7 +48,7 @@ function load_plugin(): void {
 	// Create rewrite rules to help with the hierarchy of non-identical post_types.
 	add_action( 'generate_rewrite_rules', __NAMESPACE__ . '\\generate_rewrite_rules' );
 	
-	// Change permalink to use the same rewrite-base as 'ft_prodution' PT
+	// Change permalink to use the same rewrite-base as 'ft_prodution' PT.
 	add_filter( 'post_type_link', __NAMESPACE__ . '\\post_type_link', 10, 2 );
 
 	// Filter the main query to return a subsite-post when queried by URL.
@@ -67,21 +65,21 @@ function get_production_post_type_permastruct(): string {
 
 	global $wp_rewrite;
 
-	// Setup
+	// Setup.
 	$_prod_pt = Registration\get_production_post_type();
 
-	// get something like "produktionen/%ft_productions%" 
-	// or even changed to "stücke/kinder/%ft_productions%"
+	// Get something like "produktionen/%ft_productions%" 
+	// or even changed to "stücke/kinder/%ft_productions%".
 	$_prod_pt_permastruct = $wp_rewrite->get_extra_permastruct( $_prod_pt );
 
-	// could be string|false :: https://developer.wordpress.org/reference/classes/wp_rewrite/get_extra_permastruct/#return
+	// could be string|false :: https://developer.wordpress.org/reference/classes/wp_rewrite/get_extra_permastruct/#return.
 	$_prod_pt_permastruct = ( $_prod_pt_permastruct ) ? $_prod_pt_permastruct : '';
 
-	// remove the singular-struct of the 'ft_production' PT
+	// remove the singular-struct of the 'ft_production' PT.
 	$_prod_pt_permastruct = str_replace( '/%' . $_prod_pt . '%', '', $_prod_pt_permastruct );
 
 	// in case that the 'ft_production' has a changed permastruct
-	// from the default, get the used struct
+	// from the default, get the used struct.
 	return $_prod_pt_permastruct;
 }
 
@@ -98,25 +96,28 @@ function get_production_post_type_permastruct(): string {
  * @return void
  */
 function generate_rewrite_rules( WP_Rewrite $wp_rewrite ): void {
- 
+	/* 
+	 * Could also be:
+	 * 
+	 *     $wp_rewrite->feed_base,
+	 *     'rdf',
+	 *     'rss',
+	 *     'rss2',
+	 *     'atom',
+	 */
 	$_endpoints_to_exclude = join(
 		'|',
 		[
 			$wp_rewrite->comments_base,
 			$wp_rewrite->pagination_base,
 			$wp_rewrite->comments_pagination_base,
-			// $wp_rewrite->feed_base,
-			// 'rdf',
-			// 'rss',
-			// 'rss2',
-			// 'atom',
 			'trackback',
 			'embed',
 		]
 	);
 
-	// exclude EP_PERMALINK endpoints
-	// https://regex101.com/r/iIYoHa/1
+	// Exclude EP_PERMALINK endpoints
+	// https://regex101.com/r/iIYoHa/1.
 	$_url = get_production_post_type_permastruct() . '/((?!' . $wp_rewrite->pagination_base . ').[^/]*)/((?!' . $_endpoints_to_exclude . ').[^/]*)/?$';
 
 	$_match_args = [
@@ -130,7 +131,9 @@ function generate_rewrite_rules( WP_Rewrite $wp_rewrite ): void {
 		);
 
 	/**
-	 * @example 'produktionen/([^/]*)/((?!feed|trackback|...).[^/]*)/?$' => 'index.php?tb_prod_subsite=$matches[2]&ft_production=$matches[1]'
+	 * The rewrite rules that will be added look like:
+	 * 
+	 * @example 'produktionen/([^/]*)/((?!feed|trackback|...).[^/]*)/?$' => 'index.php?tb_prod_subsite=$matches[2]&ft_production=$matches[1]',
 	 */
 	$subsite_rules = array(
 		$_url => $_match,
@@ -145,8 +148,8 @@ function generate_rewrite_rules( WP_Rewrite $wp_rewrite ): void {
  * 
  * @see https://developer.wordpress.org/reference/hooks/post_type_link/
  *
- * @param  string  $permalink URL of the current post
- * @param  WP_Post $post      current Post aka Production-Subsite
+ * @param  string  $permalink URL of the current post.
+ * @param  WP_Post $post      current Post aka Production-Subsite.
  * 
  * @return string 
  */
@@ -159,7 +162,7 @@ function post_type_link( string $permalink, WP_Post $post ): string {
 	
 	// Disable this filter inside the block-editor
 	// to allow the normal 'post_name' input to be accessible
-	// otherwise, it would be removed by the existence of this filter
+	// otherwise, it would be removed by the existence of this filter.
 	if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 		return $permalink;
 	}
@@ -187,7 +190,7 @@ function post_type_link( string $permalink, WP_Post $post ): string {
  */
 function pre_get_posts( WP_Query $query ): void {
 
-	// Setup
+	// Setup.
 	$_prod_pt = Registration\get_production_post_type();
 	
 	if ( ! $query->is_main_query() ) {
@@ -210,7 +213,7 @@ function pre_get_posts( WP_Query $query ): void {
 		return;
 	}
 	
-	/**
+	/*
 	 * @see https://make.wordpress.org/core/2020/06/26/wordpress-5-5-better-fine-grained-control-of-redirect_guess_404_permalink/
 	 * @see https://core.trac.wordpress.org/ticket/16557
 	 */
@@ -227,12 +230,10 @@ function pre_get_posts( WP_Query $query ): void {
 		) 
 	);
 
-	// guard clausing
 	if ( 0 === count( $production_query->posts ) ) {
 		return;
 	}
 
-	// guard clausing
 	if ( ! $production_query->post instanceof WP_Post ) {
 		return;
 	}
@@ -250,12 +251,10 @@ function pre_get_posts( WP_Query $query ): void {
 		) 
 	);
 
-	// guard clausing
 	if ( 0 === count( $subsite_query->posts ) ) {
 		return;
 	}
 
-	// guard clausing
 	if ( ! $subsite_query->post instanceof WP_Post ) {
 		return;
 	}
@@ -275,8 +274,8 @@ function pre_get_posts( WP_Query $query ): void {
 	unset( $query->query_vars[ Production_Subsites\PT_SLUG ] );
 	unset( $query->query_vars[ $_prod_pt ] );
 
-	// some defaults
-	// because we are only viewing is_singular()
+	// Set some defaults,
+	// because we are only viewing is_singular().
 	$query->query['no_found_rows']               = true;
 	$query->query_vars['no_found_rows']          = true;
 	$query->query['update_post_meta_cache']      = false;

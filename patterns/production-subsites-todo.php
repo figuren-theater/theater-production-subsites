@@ -7,13 +7,13 @@
  */
 
 return array(
-	'title'         => __( 'Prepare & Setup', 'ft-network-block-patterns' ),
+	'title'         => __( 'Prepare & Setup', 'theater-production-subsites' ),
 	'viewportWidth' => 500,
 	'categories'    => array( 'page', 'theatrebase' ),
 	'postTypes'     => array( 'tb_prod_subsite', 'ft_production' ), // unsupported, yet.
 	'blockTypes'    => array( 'core/post-content' ),
 	'content'       => '<!-- wp:heading -->
-<h2>' . __( 'Prepare & Setup', 'ft-network-block-patterns' ) . '</h2>
+<h2>' . __( 'Prepare & Setup', 'theater-production-subsites' ) . '</h2>
 <!-- /wp:heading -->
 
 <!-- wp:pluginette/todo-block-list {"className":"is-style-ft-todo"} -->

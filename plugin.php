@@ -8,7 +8,7 @@
  * @license           GPL-3.0+
  *
  * @wordpress-plugin
- * Plugin Name:       figuren.theater | theater_production_subsites
+ * Plugin Name:       Theater Production Subsites
  * Plugin URI:        https://github.com/figuren-theater/theater-production-subsites
  * Description:       ... like the figuren.theater WordPress Multisite network.
  * Version:           0.1.0-alpha
@@ -32,7 +32,7 @@ const PT_SLUG   = 'tb_prod_subsite';
 /**
  * REMOVE
  *
- * @todo Add composer autoloading strategy
+ * @todo https://github.com/figuren-theater/theater-production-subsites/issues/5 Add composer autoloading strategy
  */
 require_once DIRECTORY . '/inc/admin-ui/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/block-loading/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant

@@ -6,7 +6,7 @@
  */
 
 return array(
-	'title'      => __( 'Production Subsite Audio Playlist V2', 'ft-network-block-patterns' ),
+	'title'      => __( 'Production Subsite Audio Playlist V2', 'theater-production-subsites' ),
 	'categories' => array( 'page', 'columns', 'theatrebase' ),
 	'postTypes'  => array( 'tb_prod_subsite', 'ft_production' ),
 	'blockTypes' => array( 'core/post-content' ),

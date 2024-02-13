@@ -9,7 +9,7 @@
  */
 
 return array(
-	'title'         => __( 'Copy & Paste Facts for a production', 'ft-network-block-patterns' ),
+	'title'         => __( 'Copy & Paste Facts for a production', 'theater-production-subsites' ),
 	'description'   => 'Klicke einfach auf die Textbausteine die du benötigst um sie in deine Zwischenablage zu kopieren.',
 	'viewportWidth' => 500,
 	'categories'    => array( 'page', 'theatrebase' ),

@@ -21,9 +21,10 @@ use function get_post;
 use function get_post_type;
 use function is_network_admin;
 use function is_user_admin;
+use function sanitize_key;
 use function wp_insert_post;
 use function wp_nonce_url;
-use function wp_redirect;
+use function wp_safe_redirect;
 use function wp_verify_nonce;
 
 const ACTION = Production_Subsites\PT_SLUG . '_as_draft';
@@ -51,7 +52,7 @@ function load_plugin(): void {
 	// and public views.
 	// Not for:
 	// - network-admin views
-	// - user-admin views
+	// - user-admin views.
 	if ( is_network_admin() || is_user_admin() ) {
 		return;
 	}
@@ -116,19 +117,18 @@ function admin_action_subsite_as_draft(): void {
 	}
 	
 	
-	// Nonce verification
-	if ( ! isset( $_GET[ NONCE ] ) || ! \is_string( $_GET[ NONCE ] ) || false === wp_verify_nonce( $_GET[ NONCE ], ACTION ) ) {
+	// Nonce verification.
+	if ( ! isset( $_GET[ NONCE ] ) || ! \is_string( $_GET[ NONCE ] ) || false === wp_verify_nonce( sanitize_key( $_GET[ NONCE ] ), ACTION ) ) {
 		return;
 	}
 	 
-	// get the original post id
+	// Get the original post id.
 	$post_id = ( isset( $_GET['post'] ) ? absint( $_GET['post'] ) : absint( $_POST['post'] ) );
 	
-	// and all the original post data then
+	// And all the original post data then.
 	$post = get_post( $post_id );
 
 	if ( ! $post instanceof WP_Post ) {
-		// \wp_die('Post creation failed, could not find original post: ' . $post_id);
 		do_action(
 			'qm/error',
 			'Production-Subsite creation failed, could not find original production with ID: {post_id}',
@@ -139,20 +139,15 @@ function admin_action_subsite_as_draft(): void {
 		return;
 	}
 
-	// if post data exists, 
-	// create the post prod_subsite
-
-	// new post data array
-	// Note: post_title and post_content are required
+	// If post data exists, 
+	// create the 'prod_subsite' post.
+	// Note: post_title and post_content are required.
 	$args = [
-
-		// 'post_author'    => $new_post_author, // Default is the current user ID.
-		// 'post_title'     => sprintf( 
-		// __('New … for %s','Title of new draft Subsite for Productions (%s)', 'theater-production-subsites'),
-		// $post->post_title
-		// ), // a pre-filled title prevents the pattern-modal to trigger
-		'post_title'     => '', // required
-		'post_content'   => ' ', // required
+		// 'post_author' // Defaults to the current user ID.
+		
+		// A pre-filled title prevents the pattern-modal to trigger.
+		'post_title'     => '', // This is required.
+		'post_content'   => ' ', // This is required.
 
 		'post_status'    => 'draft',
 		'post_parent'    => $post_id,
@@ -169,15 +164,15 @@ function admin_action_subsite_as_draft(): void {
 			'post'   => $new_post_id,
 		];
 	
+		// Build a URL like this: wp-admin/post.php?action=edit&post=123 .
 		$_wp_redirect_url = add_query_arg( 
 			$_wp_redirect_url_args, 
 			admin_url( 'post.php' )
 		);
 
 	
-	// finally, redirect to the edit post screen for the new draft
-	// \wp_redirect( \admin_url( 'post.php?action=edit&post=' . $new_post_id ) );
-	wp_redirect( $_wp_redirect_url );
+	// Finally, redirect to the edit post screen for the new draft.
+	wp_safe_redirect( $_wp_redirect_url );
 	exit;
 }
 
@@ -225,9 +220,9 @@ function row_actions( array $actions, WP_Post $post ): array {
  * Get an nonced Admin-URL to create a new 
  * "Production Subsite" based on a Production-post-ID
  *
- * @param   WP_Post $post should be "Production"
+ * @param   WP_Post $post This should be a "Production" post.
  * 
- * @return  string            Admin-URL 
+ * @return  string        Admin-URL 
  */
 function get_add_new_url( WP_Post $post ): string {
 
@@ -282,7 +277,6 @@ function admin_bar_render(): void {
 		return;
 	}
 
-	// we can add a submenu item too
 	$wp_admin_bar->add_menu(
 		array(
 			'parent' => 'new-content',

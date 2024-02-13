@@ -65,9 +65,7 @@ function get_post_type_supports( string $post_type ): array {
 	return (array) apply_filters(
 		__NAMESPACE__ . '\\post_type_supports',
 		[
-			// 'premiere',
-			// 'duration',
-			// 'targetgroup',
+			'production-subsites',
 		],
 		$post_type
 	);
