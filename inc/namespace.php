@@ -1,53 +1,52 @@
 <?php
 /**
- * Figuren_Theater theater_production_subsites.
+ * Figuren_Theater Production_Subsites.
  *
  * @package figuren-theater/theater-production-subsites
  */
 
-namespace Figuren_Theater\theater_production_subsites;
-
-use Altis;
+namespace Figuren_Theater\Production_Subsites;
 
 /**
  * Register module.
  *
  * @return void
  */
-function register() :void {
+function register(): void {
 
-	$default_settings = [
-		'enabled' => true, // Needs to be set.
-	];
-	$options = [
-		'defaults' => $default_settings,
-	];
-
-	Altis\register_module(
+	load_plugin_textdomain(
 		'theater-production-subsites',
-		DIRECTORY,
-		'theater_production_subsites',
-		$options,
-		__NAMESPACE__ . '\\bootstrap'
+		false,
+		DIRECTORY . '/languages'
 	);
-}
 
-/**
- * Bootstrap module, when enabled.
- *
- * @return void
- */
-function bootstrap() :void {
+	// Relevant to everybody, 
+	// who wants to use a hierachical sub-post_type.
+	Registration\bootstrap(); // Runs on 'init':11.
 
-	/**
-	 * Automatically load Plugins.
-	 *
-	 * @example NameSpace\bootstrap();
-	 */
+	Admin_UI\bootstrap(); // Runs on 'init':12.
+	Urls\bootstrap(); // Runs on 'init':1.
+	
+	// Only relevant to our theater context (for now).
+	// Block_Loading\bootstrap(); // Should run on init|0 or earlier. 
+	Pattern_Loading\bootstrap(); // Should run on init.
+	
 
 	/**
-	 * Load 'Best practices'.
-	 *
-	 * @example NameSpace\bootstrap();
-	 */
+	 * Load our addition for the "Theater" WordPress plugin.
+	 * 
+	 * From the plugin docs:
+	 * "Use this [hook] to safely load plugins that depend on Theater."
+	 * 
+	 * By the design of "Theater" this NEEDS TO BE DONE on or before 'plugins_loaded'!
+	 * 
+	 * @source https://github.com/slimndap/wp-theatre/blob/70bfc1efff2f1b6e89631820befb5e67cfe4d34c/theater.php#L216
+	 */ 
+	\add_action(
+		'wpt_loaded',
+		function (): void {
+
+			\add_post_type_support( 'wp_theatre_prod', PT_SUPPORT );
+		}
+	);
 }
