@@ -14,21 +14,30 @@ namespace Figuren_Theater\Production_Subsites;
  */
 function register(): void {
 
-	$post_types = Registration\get_post_types();
-
-	if ( empty( $post_types ) ) {
-		return;
-	}
-
-	\array_map(
-		__NAMESPACE__ . '\\Registration\\add_post_type_supports',
-		$post_types
+	load_plugin_textdomain(
+		'theater-production-subsites',
+		false,
+		DIRECTORY . '/languages'
 	);
 
-	// Block_Loading\bootstrap(); // Should run on init|0 or earlier. 
-	Pattern_Loading\bootstrap(); // Should run on init.
+	// Relevant to everybody, 
+	// who wants to use a hierachical sub-post_type.
+	Registration\bootstrap(); // Runs on 'init':11.
+
+	Admin_UI\bootstrap(); // Runs on 'init':12.
+	Urls\bootstrap(); // Runs on 'init':1.
+
+
+	// PSEUDOCODE !
+
+	// \add_action('wpt_init', function () : void {
+
+		// \add_post_type_support( 'wpt_production', PT_SUPPORT );
+		\add_post_type_support( 'ft_production', PT_SUPPORT );
+		
+		// Only relevant to our theater context for now.
+		// Block_Loading\bootstrap(); // Should run on init|0 or earlier. 
+		Pattern_Loading\bootstrap(); // Should run on init.
 	
-	Admin_UI\bootstrap(); // Should run on init.
-	// Post_Type\bootstrap();// Should run on .... .
-	Urls\bootstrap(); // Should run on init.
+	// });
 }

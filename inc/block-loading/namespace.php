@@ -28,9 +28,7 @@ use function wp_set_script_translations;
  * @return void
  */
 function bootstrap(): void {
-	add_action( 'init', __NAMESPACE__ . '\\i18n', 1 );
-
-	add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\\enqueue_assets' );
+	add_action( 'init', __NAMESPACE__ . '\\load', 1 );
 }
 
 /**
@@ -38,17 +36,14 @@ function bootstrap(): void {
  *
  * @return void
  */
-function i18n(): void {
-	load_plugin_textdomain(
-		'theater-production-subsites',
-		false,
-		Production_Subsites\DIRECTORY . '/languages'
-	);
+function load(): void {
 
 	\array_map(
 		__NAMESPACE__ . '\\register_asset',
 		Registration\get_editor_assets()
 	);
+	
+	add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\\enqueue_assets' );
 }
 
 /**

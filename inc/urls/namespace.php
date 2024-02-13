@@ -26,7 +26,7 @@ use function is_user_admin;
  */
 function bootstrap(): void {
 
-	add_action( 'init', __NAMESPACE__ . '\\load_plugin' );  
+	add_action( 'init', __NAMESPACE__ . '\\load_plugin', 1 ); // Important to run before 10, to have especially the filter available within wp-admin.
 }
 
 /**
@@ -57,30 +57,35 @@ function load_plugin(): void {
 
 
 /**
- * Retrieve rewrite-base of 'ft_production' PT
+ * Retrieve rewrite-base of 'parent' PT
+ * 
+ * @param   string $post_type Slug of a sub-post_type.
  *
- * @return  string       the URL part, that indicates our PT, by default it's: 'produktionen'
+ * @return  string            URL part, that indicates our PT, by default it defaults to the rewrite_base of the 'parent' PT.
  */
-function get_production_post_type_permastruct(): string {
+function get_parent_post_type_permastruct( string $post_type ): string {
 
 	global $wp_rewrite;
 
-	// Setup.
-	$_prod_pt = Registration\get_production_post_type();
+	$parent = Registration\get_parent_type_slug( $post_type );
 
 	// Get something like "produktionen/%ft_productions%" 
 	// or even changed to "stücke/kinder/%ft_productions%".
-	$_prod_pt_permastruct = $wp_rewrite->get_extra_permastruct( $_prod_pt );
+	$permastruct = $wp_rewrite->get_extra_permastruct( $parent );
 
 	// could be string|false :: https://developer.wordpress.org/reference/classes/wp_rewrite/get_extra_permastruct/#return.
-	$_prod_pt_permastruct = ( $_prod_pt_permastruct ) ? $_prod_pt_permastruct : '';
+	$permastruct = ( $permastruct ) ? $permastruct : '';
 
-	// remove the singular-struct of the 'ft_production' PT.
-	$_prod_pt_permastruct = str_replace( '/%' . $_prod_pt . '%', '', $_prod_pt_permastruct );
+	// remove the singular-struct of the 'parent' PT.
+	$permastruct = str_replace( 
+		'/%' . $parent . '%',
+		'',
+		$permastruct
+	);
 
-	// in case that the 'ft_production' has a changed permastruct
+	// in case that the 'parent' has a changed permastruct
 	// from the default, get the used struct.
-	return $_prod_pt_permastruct;
+	return $permastruct;
 }
 
 
@@ -105,7 +110,7 @@ function generate_rewrite_rules( WP_Rewrite $wp_rewrite ): void {
 	 *     'rss2',
 	 *     'atom',
 	 */
-	$_endpoints_to_exclude = join(
+	$endpoints_to_exclude = join(
 		'|',
 		[
 			$wp_rewrite->comments_base,
@@ -116,24 +121,55 @@ function generate_rewrite_rules( WP_Rewrite $wp_rewrite ): void {
 		]
 	);
 
+	\array_map(
+		function ( string $post_type ) use ( &$wp_rewrite, $endpoints_to_exclude ): void {
+			generate_subsite_rewrite_rules( 
+				$post_type, 
+				$wp_rewrite, 
+				$endpoints_to_exclude
+			);
+		},
+		\get_post_types_by_support( 
+			Production_Subsites\PT_SUPPORT 
+		)
+	);
+}
+
+/**
+ * Create rewrite rules to help with the hierarchy of non-identical post_types.
+ * 
+ * Fires after the rewrite rules are generated.
+ * 
+ * @see    https://developer.wordpress.org/reference/hooks/generate_rewrite_rules/
+ *
+ * @param  string     $parent_post_type      Slug of a parent-post_type.
+ * @param  WP_Rewrite $wp_rewrite            Current WP_Rewrite instance (passed by reference).
+ * @param  string     $endpoints_to_exclude  Existing endpoints, that should NOT match.
+ * 
+ * @return void
+ */
+function generate_subsite_rewrite_rules( string $parent_post_type, WP_Rewrite &$wp_rewrite, string $endpoints_to_exclude ): void {
+
+		$sub_post_type = Registration\get_sub_type_slug( $parent_post_type );
+	
 	// Exclude EP_PERMALINK endpoints
 	// https://regex101.com/r/iIYoHa/1.
-	$_url = get_production_post_type_permastruct() . '/((?!' . $wp_rewrite->pagination_base . ').[^/]*)/((?!' . $_endpoints_to_exclude . ').[^/]*)/?$';
+	$_url = get_parent_post_type_permastruct( $sub_post_type ) . '/((?!' . $wp_rewrite->pagination_base . ').[^/]*)/((?!' . $endpoints_to_exclude . ').[^/]*)/?$';
 
 	$_match_args = [
-		Production_Subsites\PT_SLUG             => '$matches[2]',
-		Registration\get_production_post_type() => '$matches[1]',
+		$sub_post_type    => '$matches[2]',
+		$parent_post_type => '$matches[1]',
 	];
 	
-		$_match = add_query_arg( 
-			$_match_args, 
-			'index.php'
-		);
+	$_match = add_query_arg( 
+		$_match_args, 
+		'index.php'
+	);
 
 	/**
 	 * The rewrite rules that will be added look like:
 	 * 
-	 * @example 'produktionen/([^/]*)/((?!feed|trackback|...).[^/]*)/?$' => 'index.php?tb_prod_subsite=$matches[2]&ft_production=$matches[1]',
+	 * @example 'parent-post_type-permastruct/([^/]*)/((?!feed|trackback|...).[^/]*)/?$' => 'index.php?parent_post_type_sub=$matches[2]&parent_post_type=$matches[1]',
 	 */
 	$subsite_rules = array(
 		$_url => $_match,
@@ -144,32 +180,36 @@ function generate_rewrite_rules( WP_Rewrite $wp_rewrite ): void {
  
 
 /**
- * Change permalink to use the same rewrite-base as 'ft_prodution' PT
+ * Change permalink to use the same rewrite-base as 'parent' PT
  * 
  * @see https://developer.wordpress.org/reference/hooks/post_type_link/
  *
  * @param  string  $permalink URL of the current post.
- * @param  WP_Post $post      current Post aka Production-Subsite.
+ * @param  WP_Post $post      current Post aka Subsite.
  * 
  * @return string 
  */
 function post_type_link( string $permalink, WP_Post $post ): string {
 	global $pagenow;
 
-	if ( Production_Subsites\PT_SLUG !== $post->post_type ) {
+	if ( ! Registration\is_subtype_allowed( $post->post_type ) ) {
 		return $permalink;
-	}
-	
-	// Disable this filter inside the block-editor
-	// to allow the normal 'post_name' input to be accessible
-	// otherwise, it would be removed by the existence of this filter.
+	}   
+
+	/**
+	 * Disable this filter inside the block-editor
+	 * to allow the normal 'post_name' input to be accessible
+	 * otherwise, it would be removed by the existence of this filter.
+	 *
+	 * @todo Use manipulated post_type_link in editor UI, too
+	 */
 	if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 		return $permalink;
 	}
 	
 	return str_replace( 
-		Production_Subsites\PT_SLUG,
-		get_production_post_type_permastruct(),
+		$post->post_type,
+		get_parent_post_type_permastruct( $post->post_type ),
 		$permalink
 	);
 }
@@ -188,10 +228,7 @@ function post_type_link( string $permalink, WP_Post $post ): string {
  * 
  * @return void
  */
-function pre_get_posts( WP_Query $query ): void {
-
-	// Setup.
-	$_prod_pt = Registration\get_production_post_type();
+function pre_get_posts( WP_Query &$query ): void {
 	
 	if ( ! $query->is_main_query() ) {
 		return;
@@ -200,16 +237,42 @@ function pre_get_posts( WP_Query $query ): void {
 	if ( ! isset( $query->query_vars['post_type'] ) ) {
 		return;
 	}
-	
-	if ( ! isset( $query->query_vars[ Production_Subsites\PT_SLUG ] ) ) {
+
+	\array_map(
+		function ( string $parent_slug ) use ( &$query ): void {
+			manipulate_main_query( 
+				$parent_slug,
+				Registration\get_sub_type_slug( $parent_slug ),
+				$query
+			);
+		},
+		\get_post_types_by_support( 
+			Production_Subsites\PT_SUPPORT 
+		)
+	);
+}
+
+
+/**
+ * Manipulate the main query to allow for mixed post_types within one request.
+ *
+ * @param  string   $parent_slug    Slug of a parent-post_type.
+ * @param  string   $subsite_slug   Slug of a sub-post_type.
+ * @param  WP_Query $query          The WordPress Query class (passed by reference).
+ *
+ * @return void
+ */
+function manipulate_main_query( string $parent_slug, string $subsite_slug, WP_Query &$query ): void {
+
+	if ( ! isset( $query->query_vars[ $subsite_slug ] ) ) {
 		return;
 	}
 
-	if ( Production_Subsites\PT_SLUG !== $query->query_vars['post_type'] ) {
+	if ( $subsite_slug !== $query->query_vars['post_type'] ) {
 		return;
 	}
 	
-	if ( ! isset( $query->query_vars[ $_prod_pt ] ) ) {
+	if ( ! isset( $query->query_vars[ $parent_slug ] ) ) {
 		return;
 	}
 	
@@ -219,10 +282,10 @@ function pre_get_posts( WP_Query $query ): void {
 	 */
 	add_filter( 'do_redirect_guess_404_permalink', '__return_false' );
 
-	$production_query = new WP_Query(
+	$parent_query = new WP_Query(
 		array( 
-			'post_name__in'          => [ $query->query_vars[ $_prod_pt ] ],
-			'post_type'              => $_prod_pt,
+			'post_name__in'          => [ $query->query_vars[ $parent_slug ] ],
+			'post_type'              => $parent_slug,
 			'no_found_rows'          => true,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
@@ -230,20 +293,20 @@ function pre_get_posts( WP_Query $query ): void {
 		) 
 	);
 
-	if ( 0 === count( $production_query->posts ) ) {
+	if ( 0 === count( $parent_query->posts ) ) {
 		return;
 	}
 
-	if ( ! $production_query->post instanceof WP_Post ) {
+	if ( ! $parent_query->post instanceof WP_Post ) {
 		return;
 	}
 
 	$subsite_query = new WP_Query(
 		array( 
-			'post_name__in'          => [ $query->query_vars[ Production_Subsites\PT_SLUG ] ],
-			'post_type'              => Production_Subsites\PT_SLUG,
+			'post_name__in'          => [ $query->query_vars[ $subsite_slug ] ],
+			'post_type'              => $subsite_slug,
 			// 'post_parent' // this can be tricky
-			'post_parent__in'        => [ $production_query->post->ID ],
+			'post_parent__in'        => [ $parent_query->post->ID ],
 			'no_found_rows'          => true,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
@@ -260,19 +323,19 @@ function pre_get_posts( WP_Query $query ): void {
 	}
 
 	$query->query['p']              = $subsite_query->post->ID;
-	$query->query['post_type']      = Production_Subsites\PT_SLUG;
+	$query->query['post_type']      = $subsite_slug;
 	$query->query_vars['p']         = $subsite_query->post->ID;
-	$query->query_vars['post_type'] = Production_Subsites\PT_SLUG;
+	$query->query_vars['post_type'] = $subsite_slug;
 
 	unset( $query->query['name'] );
 	unset( $query->query['pagename'] );
-	unset( $query->query[ Production_Subsites\PT_SLUG ] );
-	unset( $query->query[ $_prod_pt ] );
+	unset( $query->query[ $subsite_slug ] );
+	unset( $query->query[ $parent_slug ] );
 
 	unset( $query->query_vars['name'] );
 	unset( $query->query_vars['pagename'] );
-	unset( $query->query_vars[ Production_Subsites\PT_SLUG ] );
-	unset( $query->query_vars[ $_prod_pt ] );
+	unset( $query->query_vars[ $subsite_slug ] );
+	unset( $query->query_vars[ $parent_slug ] );
 
 	// Set some defaults,
 	// because we are only viewing is_singular().
