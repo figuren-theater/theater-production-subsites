@@ -8,7 +8,7 @@
 namespace Figuren_Theater\Production_Subsites\Registration;
 
 use Figuren_Theater\Production_Subsites;
-use WP_Post_Type;
+use WP_Post;
 
 use function apply_filters;
 
@@ -30,28 +30,30 @@ function bootstrap(): void {
  */
 function get_production_post_type(): string {
 	/**
-	 * Use the 'production-post-type' of the WordPress 'theater' plugin as a default.
-	 *
-	 * Also provides a default, which is the old slug, I (@carstingaxion) used throughout the figuren.theater multisite network.
+	 * Use the 'production-post-type' of the 'Theater' WordPress plugin as a default.
 	 *
 	 * @todo This filter is documented at ...
 	 */
 	return (string) apply_filters(
-		'wpt-production-posttype',
-		'ft_production'
+		'wpt_production-posttype',
+		'wp_theatre_prod'
 	);
 }
 
 
 /**
- * Get the slug of that taxonomy that is or should be used for shadowing the theater-productions post_type.
+ * Get the slug of that taxonomy,
+ * that is or should be used for shadowing the theater-productions post_type.
+ * 
+ * DANGER: THIS IS PSEUDOCODE,
+ *         the taxonomy isn't registered anywhere (yet).
  *
  * @return string
  */
 function get_production_shadow_taxonomy(): string {
 	return (string) apply_filters(
-		'wpt-production-shadow-taxonomy',
-		'ft_production_shadow'
+		'wpt_production-shadow-taxonomy',
+		'wp_theatre_prod_shadow'
 	);
 }
 
@@ -79,7 +81,14 @@ function get_editor_assets(): array {
 
 
 
-
+/**
+ * Check the given parent-post type's support 
+ * for our 'sub-post_types' feature.
+ *
+ * @param  string $post_type The parent-post type being checked.
+ *
+ * @return bool
+ */
 function is_post_type_allowed( string $post_type ): bool {
 	return \post_type_supports(
 		$post_type,
@@ -87,11 +96,32 @@ function is_post_type_allowed( string $post_type ): bool {
 	);
 }
 
+
+/**
+ * Check the given sub-post_type
+ * if it supports our 'sub-post_types' feature.
+ *
+ * @param  string $post_type The sub-post type being checked.
+ *
+ * @return bool
+ */
 function is_subtype_allowed( string $post_type ): bool {
-	return is_post_type_allowed( get_parent_type_slug( $post_type ) );
+	return is_post_type_allowed( 
+		get_parent_type_slug( $post_type )
+	);
 }
 
-function is_post_allowed( \WP_Post $post ): bool {
+
+/**
+ * Check the given parent-post type's support 
+ * for our 'sub-post_types' feature 
+ * AND whether the current user is allowed to edit those.
+ *
+ * @param  WP_Post $post The parent-post being checked.
+ *
+ * @return bool
+ */
+function is_post_allowed( WP_Post $post ): bool {
 
 	if ( ! is_post_type_allowed( $post->post_type ) ) {
 		return false;     
@@ -117,11 +147,17 @@ function register_sub_post_types(): void {
 }
 
 
-
+/**
+ * Registers a new sub-post type based on a given parent-post type.
+ *
+ * @param  string $parent_post_type  The slug of the post_type that is getting parent.
+ *
+ * @return void
+ */
 function register_sub_post_type( string $parent_post_type ): void {
 	\register_post_type(
 		get_sub_type_slug( $parent_post_type ),
-		get_sub_type_args( $parent_post_type )
+		get_sub_type_args( $parent_post_type ) // @phpstan-ignore-line
 	);
 }
 
@@ -203,7 +239,7 @@ function get_sub_type_args( string $parent_post_type ): array {
 
 
 		/**
-		 * Localiced Labels
+		 * Localised Labels
 		 * 
 		 * ExtendedCPTs generates the default labels in English for your post type. 
 		 * If you need to allow your post type labels to be localized, 
@@ -213,7 +249,6 @@ function get_sub_type_args( string $parent_post_type ): array {
 		 * @source https://github.com/johnbillion/extended-cpts/pull/5#issuecomment-33756474
 		 * @see https://github.com/johnbillion/extended-cpts/blob/d6d83bb41eba9a3603929244c71f3f806c2a14d8/src/PostType.php#L152
 		 */
-		// 'label'                     => __( 'Subsites', 'theatrebase-production-subsites' ),
 		'labels'            => [
 			'name'                     => __( 'Subsites', 'theater-production-subsites' ),
 			'singular_name'            => __( 'Subsite', 'theater-production-subsites' ),

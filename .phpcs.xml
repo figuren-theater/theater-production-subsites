@@ -15,5 +15,16 @@
 				<element value="theater-production-subsites"/>
 			</property>
 		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="wpt_"/>
+				<element value="Figuren_Theater"/>
+				<element value="__NAMESPACE__"/>
+			</property>
+
+		</properties>
 	</rule> 
 </ruleset>

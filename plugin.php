@@ -44,4 +44,4 @@ require_once DIRECTORY . '/inc/registration/namespace.php'; // phpcs:ignore Word
 require_once DIRECTORY . '/inc/urls/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 
-add_action( 'init', __NAMESPACE__ . '\\register', 0 );
+add_action( 'plugins_loaded', __NAMESPACE__ . '\\register' ); // 'plugins_loaded' (or earlier) is needed for the "Theater for WordPress" integration to work.
