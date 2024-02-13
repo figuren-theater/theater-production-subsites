@@ -7,7 +7,7 @@ import { select, useSelect } from '@wordpress/data';
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
  */
-import { __ } from '@wordpress/i18n';
+// import { __ } from '@wordpress/i18n';
 
 /**
  * Get stuff to filter block attributes on the fly
@@ -21,7 +21,7 @@ import { addFilter } from '@wordpress/hooks';
  * Internal dependencies
  */
 const PT_PRODUCTION = window.Theater.ProductionPosttype.Slug;
-const PT_SUBSITE = ;
+const PT_SUBSITE = PT_PRODUCTION + '_sub';
 const TAX_PRODUCTION_SHADOW = window.Theater.ProductionPosttype.ShadowTaxonomy;
 
 const productionShadowSubsiteRelatedQueryEngine = createHigherOrderComponent(
@@ -56,10 +56,8 @@ const productionShadowSubsiteRelatedQueryEngine = createHigherOrderComponent(
 			// go on if it's a 'production' or if current post can have 'production_shadow' terms
 			// otherwise exit
 			if (
-				PT_PRODUCTION !== currentPost.type 
-				&&
-				PT_SUBSITE !== currentPost.type
-				&&
+				PT_PRODUCTION !== currentPost.type &&
+				PT_SUBSITE !== currentPost.type &&
 				!currentPost.TAX_PRODUCTION_SHADOW
 			)
 				return <BlockListBlock {...props} />;
@@ -73,30 +71,33 @@ const productionShadowSubsiteRelatedQueryEngine = createHigherOrderComponent(
 					currentPost.meta.shadow_ft_production_shadow_term_id,
 				];
 				// console.log(shadowedProductions);
-			}
+			} else if (PT_SUBSITE === currentPost.type) {
+				const getShadowedProductions = () => {
+					const parentProduction = select('core').getEntityRecord(
+						'postType',
+						PT_PRODUCTION,
+						currentPost.parent
+					);
 
-			else if (PT_SUBSITE === currentPost.type) 
-			{
-				const getShadowedProductions = (  ) => {
-					 let parentProduction = select('core').getEntityRecord( 'postType', PT_PRODUCTION, currentPost.parent ) 
-		
-					if ( 'undefined' !== typeof parentProduction && 0 !== parentProduction.meta.length)
-					{
-						shadowedProductions = [ parentProduction.meta.shadow_ft_production_shadow_term_id ];
+					if (
+						'undefined' !== typeof parentProduction &&
+						0 !== parentProduction.meta.length
+					) {
+						shadowedProductions = [
+							parentProduction.meta
+								.shadow_ft_production_shadow_term_id,
+						];
 					}
-					return;
 				};
-				getShadowedProductions(  );
-			}			
-			
-			else {
+				getShadowedProductions();
+			} else {
 				/**
 				 * HOly holy holy
 				 *
 				 * @param {Function} select Curreent posts terms of production-shadow taxonomy.
 				 * @return  Array           List of term-IDs
 				 */
-				shadowedProductions = useSelect((select) => {
+				shadowedProductions = useSelect(() => {
 					const { getEditedPostAttribute } = select('core/editor');
 					return getEditedPostAttribute(TAX_PRODUCTION_SHADOW);
 				}, []);
