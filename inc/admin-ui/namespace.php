@@ -263,9 +263,9 @@ function admin_head(): void {
  * below their respective post_parent.
  *
  * To make this work at least the 
- * - 'ft_production' PT
+ * - 'parent' PT
  *    and
- * - 'tb_prod_subsite' PT
+ * - 'sub' PT
  * needs to be registered as
  *   'hierachical' => true
  *

@@ -5,6 +5,7 @@ parameters:
     inferPrivatePropertyTypeFromConstructor: true
     paths:
         - inc/
+        - src/
         - plugin.php
     excludePaths:
         analyse:
@@ -14,3 +15,6 @@ parameters:
             # and not running within ft-platform
             - wp-content/
             - tests/
+        analyseAndScan:
+            - build/
+            - node_modules/
