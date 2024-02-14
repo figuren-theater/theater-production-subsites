@@ -10,7 +10,7 @@ return array(
 	'title'         => __( 'Prepare & Setup', 'theater-production-subsites' ),
 	'viewportWidth' => 500,
 	'categories'    => array( 'page', 'theatrebase' ),
-	'postTypes'     => array( 'tb_prod_subsite', 'ft_production' ), // unsupported, yet.
+	'postTypes'     => Figuren_Theater\Production_Subsites\Registration\get_supported_post_types(),
 	'blockTypes'    => array( 'core/post-content' ),
 	'content'       => '<!-- wp:heading -->
 <h2>' . __( 'Prepare & Setup', 'theater-production-subsites' ) . '</h2>

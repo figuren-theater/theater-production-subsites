@@ -8,7 +8,7 @@
 return array(
 	'title'      => __( 'Production Subsite Audio Playlist', 'theater-production-subsites' ),
 	'categories' => array( 'page', 'columns', 'theatrebase' ),
-	'postTypes'  => array( 'tb_prod_subsite', 'ft_production' ),
+	'postTypes'  => Figuren_Theater\Production_Subsites\Registration\get_supported_post_types(),
 	'blockTypes' => array( 'core/post-content' ),
 	'content'    => '<!-- wp:group {"align":"full","style":{"elements":{"link":{"color":{"text":"var:preset|color|primary"}}}},"backgroundColor":"foreground","textColor":"background"} -->
 		<div class="wp-block-group alignfull has-background-color has-foreground-background-color has-text-color has-background has-link-color"><!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"3vw"}}}} -->

@@ -155,10 +155,27 @@ function register_sub_post_types(): void {
  * @return void
  */
 function register_sub_post_type( string $parent_post_type ): void {
-	\register_post_type(
-		get_sub_type_slug( $parent_post_type ),
-		get_sub_type_args( $parent_post_type ) // @phpstan-ignore-line
-	);
+
+	switch ( \function_exists( 'register_extended_post_type' ) ) {
+
+		case true:
+			\register_extended_post_type(
+				get_sub_type_slug( $parent_post_type ),
+				\array_merge(
+					get_sub_type_args( $parent_post_type ), // @phpstan-ignore-line
+					get_sub_type_args_extended()
+				),
+				[]
+			);
+			break;
+		
+		default:
+			\register_post_type(
+				get_sub_type_slug( $parent_post_type ),
+				get_sub_type_args( $parent_post_type ) // @phpstan-ignore-line
+			);
+			break;
+	}
 }
 
 
@@ -267,7 +284,7 @@ function get_sub_type_args( string $parent_post_type ): array {
 			'attributes'               => __( 'Subsite Attributes', 'theater-production-subsites' ),
 			'insert_into_item'         => __( 'Insert into Subsite', 'theater-production-subsites' ),
 			'uploaded_to_this_item'    => __( 'Uploaded to this Subsite', 'theater-production-subsites' ),
-			'featured_image'           => __( 'Featured Image', 'theater-production-subsites' ),
+			'featured_image'           => __( 'Image', 'theater-production-subsites' ),
 			'set_featured_image'       => __( 'Set featured image', 'theater-production-subsites' ),
 			'remove_featured_image'    => __( 'Remove featured image', 'theater-production-subsites' ),
 			'use_featured_image'       => __( 'Use as featured image', 'theater-production-subsites' ),
@@ -290,12 +307,48 @@ function get_sub_type_args( string $parent_post_type ): array {
 
 
 /**
+ * Returns a list of arguments prepared for register_extended_post_type() 
+ * to set up a sub-post_type for a given parent-post_type.
+ * 
+ * @see https://github.com/johnbillion/extended-cpts/wiki
+ *
+ * @return array<string, string|bool>
+ */
+function get_sub_type_args_extended(): array {
+	
+	return [
+		// 'label' => __( 'Subsites', 'theatrebase-production-subsites' ),
+
+		// The "Featured Image" text used in various places
+		// in the admin area can be replaced with
+		// a more appropriate name for the featured image
+		// 'featured_image' => _x( 'Image', 'Featured Image Label', 'theatrebase-production-subsites' ),
+
+				'enter_title_here' => __( 'Subsite Title', 'theatrebase-production-subsites' ),
+
+		'quick_edit'               => false,
+
+		// Add the post type to the site's main RSS feed:
+		'show_in_feed'             => false,
+
+		// Add the post type to the 'Recently Published' section of the dashboard:
+		'dashboard_activity'       => true,
+
+		// An entry is added to the "At a Glance"
+		// dashboard widget for your post type by default.
+		'dashboard_glance'         => false,
+
+	];
+}
+
+
+/**
  * Returns a list of post_type slugs for all registered subsite-post_types.
  *
  * @return string[]   List of sub-post_type-slugs.
  */
 function get_sub_types(): array {
-
+	/* 
 	$slugs = \get_post_types_by_support( Production_Subsites\PT_SUPPORT );
 
 	// Loop over all post_type slugs and add the subsite suffix.
@@ -305,7 +358,44 @@ function get_sub_types(): array {
 			return get_sub_type_slug( $parent_post_type_slug );
 		}
 	);
-
-	// Return list of subsite slugs.
 	return $slugs;
+	*/
+	// Return list of subsite slugs.
+	return get_supported_post_types( 'sub' );
+}
+
+
+/**
+ * Returns a list of post_type slugs for all parent- and subsite-post_types as well.
+ *
+ * @return string[]   List of parent- and sub-post_type-slugs.
+ */
+function get_supported_post_types( $which = 'all' ): array {
+
+	$parent_slugs = \get_post_types_by_support( Production_Subsites\PT_SUPPORT );
+
+	// Ready to go.
+	if ( 'parent' === $which ) {
+		return $parent_slugs;
+	}
+
+	// Loop over all post_type parent_slugs and add the subsite suffix.
+	$sub_slugs = $parent_slugs;
+	array_walk(
+		$sub_slugs,
+		function ( string &$parent_post_type_slug ): string {
+			return get_sub_type_slug( $parent_post_type_slug );
+		}
+	);
+
+	// Ready to go.
+	if ( 'sub' === $which ) {
+		return $sub_slugs;
+	}
+
+	// Return list of all slugs.
+	return array_merge(
+		$parent_slugs,
+		$sub_slugs
+	);
 }

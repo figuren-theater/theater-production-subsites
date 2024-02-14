@@ -26,7 +26,6 @@
 namespace Figuren_Theater\Production_Subsites;
 
 const DIRECTORY  = __DIR__;
-const PT_SLUG    = 'tb_prod_subsite';
 const PT_SUPPORT = 'hierachical-sub-post-type';
 const SUB_SUFFIX = '_sub';
 
