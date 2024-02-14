@@ -162,7 +162,7 @@ function register_sub_post_type( string $parent_post_type ): void {
 			\register_extended_post_type(
 				get_sub_type_slug( $parent_post_type ),
 				\array_merge(
-					get_sub_type_args( $parent_post_type ), // @phpstan-ignore-line
+					get_sub_type_args( $parent_post_type ),
 					get_sub_type_args_extended()
 				),
 				[]
@@ -317,26 +317,24 @@ function get_sub_type_args( string $parent_post_type ): array {
 function get_sub_type_args_extended(): array {
 	
 	return [
-		// 'label' => __( 'Subsites', 'theatrebase-production-subsites' ),
-
 		// The "Featured Image" text used in various places
 		// in the admin area can be replaced with
 		// a more appropriate name for the featured image
-		// 'featured_image' => _x( 'Image', 'Featured Image Label', 'theatrebase-production-subsites' ),
+		// 'featured_image' => _x( 'Image', 'Featured Image Label', 'theater-production-subsites' ), .
 
-				'enter_title_here' => __( 'Subsite Title', 'theatrebase-production-subsites' ),
+		'enter_title_here'   => __( 'Subsite Title', 'theater-production-subsites' ),
 
-		'quick_edit'               => false,
+		'quick_edit'         => false,
 
-		// Add the post type to the site's main RSS feed:
-		'show_in_feed'             => false,
+		// Add the post type to the site's main RSS feed.
+		'show_in_feed'       => false,
 
-		// Add the post type to the 'Recently Published' section of the dashboard:
-		'dashboard_activity'       => true,
+		// Add the post type to the 'Recently Published' section of the dashboard.
+		'dashboard_activity' => true,
 
 		// An entry is added to the "At a Glance"
 		// dashboard widget for your post type by default.
-		'dashboard_glance'         => false,
+		'dashboard_glance'   => false,
 
 	];
 }
@@ -348,27 +346,16 @@ function get_sub_type_args_extended(): array {
  * @return string[]   List of sub-post_type-slugs.
  */
 function get_sub_types(): array {
-	/* 
-	$slugs = \get_post_types_by_support( Production_Subsites\PT_SUPPORT );
-
-	// Loop over all post_type slugs and add the subsite suffix.
-	array_walk(
-		$slugs,
-		function ( string &$parent_post_type_slug ): string {
-			return get_sub_type_slug( $parent_post_type_slug );
-		}
-	);
-	return $slugs;
-	*/
-	// Return list of subsite slugs.
 	return get_supported_post_types( 'sub' );
 }
 
 
 /**
  * Returns a list of post_type slugs for all parent- and subsite-post_types as well.
+ * 
+ * @param  string $which   3-way-switch to get 'parent', 'sub' or 'all' supported post_type slugs.
  *
- * @return string[]   List of parent- and sub-post_type-slugs.
+ * @return string[]        List of parent- and sub-post_type-slugs.
  */
 function get_supported_post_types( $which = 'all' ): array {
 
