@@ -1,0 +1,30 @@
+{
+    "translation-revision-date": "2024-02-29 02:19+0100",
+    "generator": "WP-CLI\/2.7.1",
+    "source": "build\/subsites-query\/subsites-query.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "de_DE",
+                "plural-forms": "nplurals=2; plural=(n != 1);"
+            },
+            "Production Subsites": [
+                "Produktions-Unterseiten"
+            ],
+            "Shows the subsites of the current production. Used on a production subsite, this block lists all sibling \"subsites\" under the same parent production.": [
+                "Zeigt die Unterseiten der aktuellen Produktion an. Dieser Block wird auf einer Produktions-Unterseite verwendet und listet alle gleichgeordneten \u201eUnterseiten\u201c derselben \u00fcbergeordneten Produktion auf."
+            ],
+            "addition": [
+                "Zusatz"
+            ],
+            "production": [
+                "Produktion"
+            ],
+            "theater": [
+                "Theater"
+            ]
+        }
+    }
+}

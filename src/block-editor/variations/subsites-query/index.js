@@ -39,15 +39,15 @@ const PT_SUBSITE = PT_PRODUCTION + '_sub';
 const productionSubsitesQuery = {
 	// category:		'theatrebase', // blockvariations can't be added to blockCollections, yet
 	name: 'theatrebase/subsites-query',
-	title: __('Production Subsites', 'theatrebase-production-blocks'),
+	title: __('Production Subsites', 'theater-production-subsites'),
 	description: __(
 		'Shows the subsites of the current production. Used on a production subsite, this block lists all sibling "subsites" under the same parent production.',
-		'theatrebase-production-blocks'
+		'theater-production-subsites'
 	),
 	keywords: [
-		__('zusatz', 'theatrebase-production-blocks'),
-		__('produktion', 'theatrebase-production-blocks'),
-		__('theater', 'theatrebase-production-blocks'),
+		__('addition', 'theater-production-subsites'),
+		__('production', 'theater-production-subsites'),
+		__('theater', 'theater-production-subsites'),
 	],
 	// isDefault: 	true,
 	icon: pages, // default: loop
