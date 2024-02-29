@@ -5,10 +5,10 @@
     <img src="https://raw.githubusercontent.com/figuren-theater/logos/main/favicon.png" alt="figuren.theater Logo" width="100" height="100">
   </a>
 
-  <h1 align="center">figuren.theater | theater_production_subsites</h1>
+  <h1 align="center">figuren.theater | Production Subsites</h1>
 
   <p align="center">
-    ... like the WordPress Multisite network for puppeteers - <a href="https://figuren.theater">figuren.theater</a>.
+    allows to create sub-sites of productions, within the WordPress Multisite network for puppeteers - <a href="https://figuren.theater">figuren.theater</a>.
     <br /><br /><br />
     <a href="https://meta.figuren.theater/blog"><strong>Read our blog</strong></a>
     <br />
@@ -31,7 +31,17 @@ This is the long desc
 
 ## Background & Motivation
 
-...
+This plugin allow to create sub-sites (aka posts) of productions (that are not productions itself, so not a typical hierachical post_type), which are populated with pre-made query-block patterns, that work (almost) automatically, e.g.
+
+- Images (all posts with post-format image and a shadow-tax relationship with the production)
+- Videos (all posts with post-format video and a shadow-tax relationship with the production)
+- Quotes (all posts with post-format quote and a shadow-tax relationship with the production)
+- Press releases (all posts with some defined post_tag (or cat.) and a shadow-tax relationship with the production)
+- a booking Form for that production
+- An auto-generated list of customers, based on played past events
+- Technical rider (needs explicit editing, no automation planned here)
+- a Rating-Kiosk to be shown directly after a show to motivate the audience to rate the production at connected services or within the own site
+- Announcement-Kiosk which highlights the upcoming 3 events and some testimonials (quote-posts or rate-comments) to be shown within a store window or similar
 
 ## Install
 
@@ -39,28 +49,6 @@ This is the long desc
     ```sh
     composer require figuren-theater/theater-production-subsites
     ```
-
-## Usage
-
-### API
-
-```php
-Figuren_Theater::API\get_...()
-```
-
-### Plugins included
-
-This package contains the following plugins. 
-Thoose are completely managed by code and lack of their typical UI.
-
-* ...
-
-
-### What does this package do in addition?
-
-Accompaniying the core functionality of the mentioned plugins, theese **best practices** are included with this package.
-
-* ...
 
 
 ## Built with & uses
