@@ -1,0 +1,212 @@
+# Copyright (C) 2024 figuren.theater
+# This file is distributed under the GPL-3.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Theater Production Subsites 0.1.0-alpha\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/theater-production-subsites\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-02-29T02:17:39+01:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.1\n"
+"X-Domain: theater-production-subsites\n"
+
+#. Plugin Name of the plugin
+msgid "Theater Production Subsites"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/figuren-theater/theater-production-subsites"
+msgstr ""
+
+#. Description of the plugin
+msgid "Allows to create sub-sites of productions within the figuren.theater WordPress Multisite network."
+msgstr ""
+
+#. Author of the plugin
+msgid "figuren.theater"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://figuren.theater"
+msgstr ""
+
+#: inc/admin-ui/namespace.php:116
+#: inc/registration/namespace.php:271
+msgid "Subsite"
+msgstr ""
+
+#: inc/admin-ui/namespace.php:231
+#: inc/admin-ui/namespace.php:232
+#: inc/registration/namespace.php:275
+msgid "New Subsite"
+msgstr ""
+
+#: inc/pattern-loading/namespace.php:84
+msgid "Theater"
+msgstr ""
+
+#: inc/registration/namespace.php:270
+#: inc/registration/namespace.php:291
+msgid "Subsites"
+msgstr ""
+
+#: inc/registration/namespace.php:272
+msgid "Add New"
+msgstr ""
+
+#: inc/registration/namespace.php:273
+msgid "Add New Subsite"
+msgstr ""
+
+#: inc/registration/namespace.php:274
+msgid "Edit Subsite"
+msgstr ""
+
+#: inc/registration/namespace.php:276
+msgid "View Subsite"
+msgstr ""
+
+#: inc/registration/namespace.php:277
+msgid "View Subsites"
+msgstr ""
+
+#: inc/registration/namespace.php:278
+msgid "Search Subsites"
+msgstr ""
+
+#: inc/registration/namespace.php:279
+msgid "No Subsites found."
+msgstr ""
+
+#: inc/registration/namespace.php:280
+msgid "No Subsites found in Trash."
+msgstr ""
+
+#: inc/registration/namespace.php:281
+msgid "Parent Subsites:"
+msgstr ""
+
+#: inc/registration/namespace.php:282
+msgid "All Subsites"
+msgstr ""
+
+#: inc/registration/namespace.php:283
+msgid "Subsite Archives"
+msgstr ""
+
+#: inc/registration/namespace.php:284
+msgid "Subsite Attributes"
+msgstr ""
+
+#: inc/registration/namespace.php:285
+msgid "Insert into Subsite"
+msgstr ""
+
+#: inc/registration/namespace.php:286
+msgid "Uploaded to this Subsite"
+msgstr ""
+
+#: inc/registration/namespace.php:287
+msgid "Image"
+msgstr ""
+
+#: inc/registration/namespace.php:288
+msgid "Set featured image"
+msgstr ""
+
+#: inc/registration/namespace.php:289
+msgid "Remove featured image"
+msgstr ""
+
+#: inc/registration/namespace.php:290
+msgid "Use as featured image"
+msgstr ""
+
+#: inc/registration/namespace.php:292
+msgid "Filter Subsite list"
+msgstr ""
+
+#: inc/registration/namespace.php:293
+msgid "Filter by date"
+msgstr ""
+
+#: inc/registration/namespace.php:294
+msgid "Subsites list navigation"
+msgstr ""
+
+#: inc/registration/namespace.php:295
+msgid "Subsites list"
+msgstr ""
+
+#: inc/registration/namespace.php:296
+msgid "Subsite published."
+msgstr ""
+
+#: inc/registration/namespace.php:297
+msgid "Subsite published privately."
+msgstr ""
+
+#: inc/registration/namespace.php:298
+msgid "Subsite reverted to draft."
+msgstr ""
+
+#: inc/registration/namespace.php:299
+msgid "Subsite scheduled."
+msgstr ""
+
+#: inc/registration/namespace.php:300
+msgid "Subsite updated."
+msgstr ""
+
+#: inc/registration/namespace.php:301
+msgid "Subsite Link"
+msgstr ""
+
+#: inc/registration/namespace.php:302
+msgid "A link to a subsite."
+msgstr ""
+
+#: inc/registration/namespace.php:325
+msgid "Subsite Title"
+msgstr ""
+
+#: patterns/production-subsites-copy-paste-facts.php:12
+msgid "Copy & Paste Facts for a production"
+msgstr ""
+
+#: patterns/production-subsites-playlist-v2.php:9
+msgid "Production Subsite Audio Playlist V2"
+msgstr ""
+
+#: patterns/production-subsites-playlist.php:9
+msgid "Production Subsite Audio Playlist"
+msgstr ""
+
+#: patterns/production-subsites-todo.php:10
+#: patterns/production-subsites-todo.php:16
+msgid "Prepare & Setup"
+msgstr ""
+
+#: src/block-editor/variations/subsites-query/index.js:42
+msgid "Production Subsites"
+msgstr ""
+
+#: src/block-editor/variations/subsites-query/index.js:43
+msgid "Shows the subsites of the current production. Used on a production subsite, this block lists all sibling \"subsites\" under the same parent production."
+msgstr ""
+
+#: src/block-editor/variations/subsites-query/index.js:48
+msgid "addition"
+msgstr ""
+
+#: src/block-editor/variations/subsites-query/index.js:49
+msgid "production"
+msgstr ""
+
+#: src/block-editor/variations/subsites-query/index.js:50
+msgid "theater"
+msgstr ""

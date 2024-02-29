@@ -10,7 +10,7 @@
  * @wordpress-plugin
  * Plugin Name:       Theater Production Subsites
  * Plugin URI:        https://github.com/figuren-theater/theater-production-subsites
- * Description:       ... like the figuren.theater WordPress Multisite network.
+ * Description:       Allows to create sub-sites of productions within the figuren.theater WordPress Multisite network.
  * Version:           0.1.0-alpha
  * Requires at least: 6.0
  * Requires PHP:      7.1
