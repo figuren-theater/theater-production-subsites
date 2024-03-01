@@ -55,7 +55,12 @@ This plugin allow to create sub-sites (aka posts) of productions (that are not p
 
   - [dependabot](/.github/dependabot.yml)
   - [code-quality](https://github.com/figuren-theater/code-quality/)
+     
      A set of status checks to ensure high and consitent code-quality for the figuren.theater platform.
+  - [johnbillion/extended-cpts](https://github.com/johnbillion/extended-cpts)
+     > A library which provides extended functionality to WordPress custom post types and taxonomies.
+
+     Adds some nice enhancements to the registered `post_type`(s), but is *not* required.
   - ....
 
 ## Contributing

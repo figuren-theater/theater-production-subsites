@@ -28,6 +28,9 @@
     "require-dev": {
         "figuren-theater/code-quality": "*"
     },
+    "suggest": {
+        "johnbillion/extended-cpts": "Adds some nice enhancements to the registered post_type(s), but is not required."
+    },
     "repositories": [
         {
             "type": "composer",
