@@ -20,7 +20,7 @@
 		"lodash.assign": "^4.2.0"
 	},
 	"devDependencies": {
-		"@wordpress/icons": "^9.43.0",
+		"@wordpress/icons": "^10.0.0",
 		"@wordpress/scripts": "^27.3.0",
 		"prettier": "^3.0.3"
 	},
