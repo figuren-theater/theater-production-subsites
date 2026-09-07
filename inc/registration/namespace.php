@@ -36,7 +36,7 @@ function get_production_post_type(): string {
 	 */
 	return (string) apply_filters(
 		'wpt_production-posttype',
-		'wp_theatre_prod'
+		'gatherpress_play'
 	);
 }
 
@@ -53,7 +53,7 @@ function get_production_post_type(): string {
 function get_production_shadow_taxonomy(): string {
 	return (string) apply_filters(
 		'wpt_production-shadow-taxonomy',
-		'wp_theatre_prod_shadow'
+		'_gatherpress_play'
 	);
 }
 
@@ -366,12 +366,9 @@ function get_supported_post_types( $which = 'all' ): array {
 	}
 
 	// Loop over all post_type parent_slugs and add the subsite suffix.
-	$sub_slugs = $parent_slugs;
-	array_walk(
-		$sub_slugs,
-		function ( string &$parent_post_type_slug ): string {
-			return get_sub_type_slug( $parent_post_type_slug );
-		}
+	$sub_slugs = array_map(
+		__NAMESPACE__ . '\\get_sub_type_slug',
+		$parent_slugs
 	);
 
 	// Ready to go.
