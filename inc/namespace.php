@@ -28,7 +28,8 @@ function register(): void {
 	Urls\bootstrap(); // Runs on 'init':1.
 	
 	// Only relevant to our theater context (for now).
-	// Block_Loading\bootstrap(); // Should run on init|0 or earlier. 
+	Block_Loading\bootstrap(); // Should run on init|0 or earlier. 
+	Page_List\bootstrap();
 	Pattern_Loading\bootstrap(); // Should run on init.
 	
 
@@ -41,12 +42,12 @@ function register(): void {
 	 * By the design of "Theater" this NEEDS TO BE DONE on or before 'plugins_loaded'!
 	 * 
 	 * @source https://github.com/slimndap/wp-theatre/blob/70bfc1efff2f1b6e89631820befb5e67cfe4d34c/theater.php#L216
-	 */ 
+	
 	\add_action(
 		'wpt_loaded',
 		function (): void {
 
 			\add_post_type_support( 'wp_theatre_prod', PT_SUPPORT );
 		}
-	);
+	); */ 
 }

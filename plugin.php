@@ -38,6 +38,7 @@ const SUB_SUFFIX = '_sub';
  */
 require_once DIRECTORY . '/inc/admin-ui/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/block-loading/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
+require_once DIRECTORY . '/inc/page-list/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/pattern-loading/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/registration/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 require_once DIRECTORY . '/inc/urls/namespace.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
