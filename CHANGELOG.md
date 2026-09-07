@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/figuren-theater/theater-production-subsites/compare/0.1.2...HEAD)
+## [Unreleased](https://github.com/figuren-theater/theater-production-subsites/compare/0.2.0...HEAD)
+
+## [0.2.0](https://github.com/figuren-theater/theater-production-subsites/compare/0.1.2...0.2.0) - 2026-09-07
+
+### 🚀 Added
+
+- New block variation & rename default production pt ([#37](https://github.com/figuren-theater/theater-production-subsites/pull/37))
 
 ## [0.1.2](https://github.com/figuren-theater/theater-production-subsites/compare/0.1.1...0.1.2) - 2026-08-15
 
