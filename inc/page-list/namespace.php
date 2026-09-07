@@ -11,6 +11,7 @@ use Figuren_Theater\Production_Subsites\Registration;
 use WP_Block;
 use WP_Block_Supports;
 use WP_Post;
+use WP_Query;
 
 use function add_filter;
 use function esc_attr;
@@ -24,7 +25,7 @@ use function get_the_title;
 use function wp_kses_post;
 
 /**
- * className used to identify our core/page-list block variation.
+ * The className used to identify our core/page-list block variation.
  *
  * @see ../../src/block-editor/variations/subsites-page-list/index.js
  */
@@ -128,7 +129,7 @@ function get_siblings( int $parent_id ): array {
 		return array();
 	}
 
-	return get_posts(
+	$siblings = new WP_Query(
 		array(
 			'post_parent'            => $parent_id,
 			'post_type'              => $post_types,
@@ -141,6 +142,7 @@ function get_siblings( int $parent_id ): array {
 			'update_post_term_cache' => false,
 		)
 	);
+	return $siblings->posts;
 }
 
 /**
@@ -193,7 +195,7 @@ function render_list( array $posts, array $parsed_block ): string {
  * @return string
  */
 function get_wrapper_attributes( array $parsed_block ): string {
-	$previous                        = WP_Block_Supports::$block_to_render;
+	$previous                           = WP_Block_Supports::$block_to_render;
 	WP_Block_Supports::$block_to_render = $parsed_block;
 
 	$wrapper_attributes = get_block_wrapper_attributes();
