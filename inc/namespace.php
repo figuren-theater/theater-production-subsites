@@ -28,7 +28,8 @@ function register(): void {
 	Urls\bootstrap(); // Runs on 'init':1.
 	
 	// Only relevant to our theater context (for now).
-	// Block_Loading\bootstrap(); // Should run on init|0 or earlier. 
+	Block_Loading\bootstrap(); // Should run on init|0 or earlier. 
+	Page_List\bootstrap();
 	Pattern_Loading\bootstrap(); // Should run on init.
 	
 
