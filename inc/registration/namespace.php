@@ -65,8 +65,7 @@ function get_production_shadow_taxonomy(): string {
  */
 function get_editor_assets(): array {
 	return [
-		'shadow-related-query',
-		'subsites-query',
+		'subsites-page-list',
 	];
 }
 

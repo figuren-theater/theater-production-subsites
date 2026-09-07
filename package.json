@@ -31,7 +31,7 @@
 		"format:js": "wp-scripts format-js",
 		"i18n:pot": " wp i18n make-pot . --exclude=node_modules,vendor",
 		"i18n:json": "wp i18n make-json languages --pretty-print --no-purge",
-		"i18n:json:map": "wp i18n make-json languages --pretty-print --no-purge '--use-map={ \"src/block-editor/variations/shadow-related-query/index.js\": \"build/shadow-related-query/shadow-related-query.js\", \"src/block-editor/variations/subsites-query/index.js\": \"build/subsites-query/subsites-query.js\" }'",
+		"i18n:json:map": "wp i18n make-json languages --pretty-print --no-purge '--use-map={ \"src/block-editor/variations/subsites-page-list/index.js\": \"build/subsites-page-list/subsites-page-list.js\" }'",
 		"lint:css": "wp-scripts lint-style",
 		"lint:css:fix": "npm run lint:css -- --fix",
 		"lint:js": "wp-scripts lint-js",
