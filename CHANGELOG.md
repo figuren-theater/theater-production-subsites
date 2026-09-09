@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/figuren-theater/theater-production-subsites/compare/0.2.0...HEAD)
+## [Unreleased](https://github.com/figuren-theater/theater-production-subsites/compare/0.3.0...HEAD)
+
+## [0.3.0](https://github.com/figuren-theater/theater-production-subsites/compare/0.2.0...0.3.0) - 2026-09-09
+
+### 🚀 Added
+
+- Add post type support for menu ordering ([#39](https://github.com/figuren-theater/theater-production-subsites/pull/39))
+- Feat/admin parent filter ([#38](https://github.com/figuren-theater/theater-production-subsites/pull/38))
 
 ## [0.2.0](https://github.com/figuren-theater/theater-production-subsites/compare/0.1.2...0.2.0) - 2026-09-07
 
