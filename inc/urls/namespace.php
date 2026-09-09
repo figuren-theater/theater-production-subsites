@@ -282,6 +282,9 @@ function manipulate_main_query( string $parent_slug, string $subsite_slug, WP_Qu
 	 */
 	add_filter( 'do_redirect_guess_404_permalink', '__return_false' );
 
+	// Post status may be filtered by other plugins, e.g. "invisible" post status.
+	$post_status = $query->query_vars['post_status'] ?? 'publish';
+
 	$parent_query = new WP_Query(
 		array( 
 			'post_name__in'          => [ $query->query_vars[ $parent_slug ] ],
@@ -290,6 +293,7 @@ function manipulate_main_query( string $parent_slug, string $subsite_slug, WP_Qu
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
 			'posts_per_page'         => 1,
+			'post_status'            => $post_status,
 		) 
 	);
 
@@ -311,6 +315,7 @@ function manipulate_main_query( string $parent_slug, string $subsite_slug, WP_Qu
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
 			'posts_per_page'         => 1,
+			'post_status'            => $post_status,
 		) 
 	);
 
