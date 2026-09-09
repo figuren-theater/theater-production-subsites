@@ -230,6 +230,7 @@ function get_sub_type_args( string $parent_post_type ): array {
 			'excerpt',
 			'custom-fields',
 			'revisions',
+			'page-attributes',
 		),
 		'public'            => true, // 'TRUE' enables editable post_name, called 'permalink|slug'.
 
