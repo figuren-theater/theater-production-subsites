@@ -402,7 +402,7 @@ function filter_by_parent_post( string $post_type, string $which ): void {
 
 	$parent_post_type = get_post_type_object( Registration\get_parent_type_slug( $post_type ) );
 
-	if( ! $parent_post_type instanceof WP_Post_Type ) {
+	if ( ! $parent_post_type instanceof WP_Post_Type ) {
 		return;
 	}
 
