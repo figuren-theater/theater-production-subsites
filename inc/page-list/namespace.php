@@ -146,7 +146,7 @@ function get_siblings( int $parent_id ): array {
 	/**
 	 * Those are for sure WP_Post objects, not int, because we didnt ask for fields=ids, and we asked for post_status=publish, so no WP_Error either.
 	 * 
-	 * @param WP_Post[] $sibling_posts
+	 * @var WP_Post[] $sibling_posts
 	 */
 	$sibling_posts = $siblings->posts;
 	return $sibling_posts;
