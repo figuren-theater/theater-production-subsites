@@ -10,6 +10,7 @@ namespace Figuren_Theater\Production_Subsites\Admin_UI;
 use Figuren_Theater\Production_Subsites;
 use Figuren_Theater\Production_Subsites\Registration;
 use WP_Post;
+use WP_Post_Type;
 use WP_Query;
 use function __;
 use function add_action;
@@ -74,11 +75,19 @@ function load_plugin(): void {
 	// Remove "Add New" Button from Admin List View.
 	add_action( 'admin_head-edit.php', __NAMESPACE__ . '\\admin_head' );
 
-		add_filter( 'posts_where', __NAMESPACE__ . '\\parent_admin_list__posts_where', 10, 2 );
+	add_filter( 'posts_where', __NAMESPACE__ . '\\parent_admin_list__posts_where', 10, 2 );
 	
 	// whatever this does
 	// it takes almost 1 sec !!!! in mysql
 	// add_filter( 'posts_distinct', __NAMESPACE__ . '\\parent_admin_list__posts_distinct', 10, 2 ); !!
+
+
+	// 1. Render the top-level parent filter dropdown.
+	add_action( 'restrict_manage_posts', __NAMESPACE__ . '\\filter_by_parent_post', 10, 2 );
+	// 2. Filter the query when an option is selected.
+	add_action( 'pre_get_posts', __NAMESPACE__ . '\\filter_posts_by_parent_query' );
+	// 3. Remove the "Months" dropdown from the post list table.
+	add_filter( 'disable_months_dropdown', __NAMESPACE__ . '\\filter_disable_months_dropdown', 10, 2 );
 }
 
 
@@ -372,4 +381,81 @@ function get_add_new_url( WP_Post $post ): string {
 	);
 
 	return $_wp_nonce_url;
+}
+
+
+
+/**
+ * Render the top-level parent filter dropdown
+ *
+ * @param  string $post_type The post type slug.
+ * @param  string $which     The location of the extra table nav markup:
+ *                           'top' or 'bottom' for WP_Posts_List_Table, 'bar' for WP_Media_List_Table.
+ *
+ * @return void
+ */
+function filter_by_parent_post( string $post_type, string $which ): void {
+	// Only run on the top filter bar and for our specific post type.
+	if ( 'top' !== $which || ! Registration\is_subtype_allowed( $post_type ) ) {
+		return;
+	}
+
+	$parent_post_type = get_post_type_object( Registration\get_parent_type_slug( $post_type ) );
+
+	if( ! $parent_post_type instanceof WP_Post_Type ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Standard WordPress admin list table GET filter request.
+	$selected = isset( $_GET['parent_filter'] ) ? absint( wp_unslash( $_GET['parent_filter'] ) ) : 0;
+
+	wp_dropdown_pages(
+		[
+			'depth'             => 1, // Restrict list to top-level posts only (post_parent = 0).
+			'selected'          => absint( $selected ),
+			'name'              => 'parent_filter',
+			'id'                => 'parent_filter',
+			'show_option_none'  => esc_html( $parent_post_type->labels->all_items ),
+			'option_none_value' => '0',
+			'post_type'         => sanitize_key( $parent_post_type->name ),
+			'hierarchical'      => false,
+		] 
+	);
+}
+
+
+/**
+ * Filters whether to remove the 'Months' drop-down from the post list table.
+ *
+ * @param bool   $disable   Whether to disable the drop-down. Default false.
+ * @param string $post_type The post type.
+ * @return bool Whether to disable the drop-down. Default false.
+ */
+function filter_disable_months_dropdown( bool $disable, string $post_type ): bool {
+	return Registration\is_subtype_allowed( $post_type ) ? true : $disable;
+}
+
+
+/**
+ * Filter the query when a parent_post option is selected.
+ *
+ * @param  WP_Query $query The WP_Query instance (passed by reference).
+ *
+ * @return void
+ */
+function filter_posts_by_parent_query( WP_Query $query ): void {
+	// Ensure we are in the admin, on the main query, and on the correct screen.
+	if ( ! is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+
+	global $pagenow, $typenow;
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Standard WordPress admin list table GET filter request.
+	if ( 'edit.php' === $pagenow && Registration\is_subtype_allowed( $typenow ) && isset( $_GET['parent_filter'] ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Standard WordPress admin list table GET filter request.
+		$parent_id = absint( wp_unslash( $_GET['parent_filter'] ) );
+		if ( $parent_id > 0 ) {
+			$query->set( 'post_parent', $parent_id );
+		}
+	}
 }
