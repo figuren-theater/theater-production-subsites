@@ -469,9 +469,9 @@ function filter_posts_by_parent_query( WP_Query $query ): void {
 /**
  * Modify WP_Query arguments for gatherpress_play_sub REST requests.
  *
- * @param array           $args    Key-value array of WP_Query args.
- * @param WP_REST_Request $request The REST request object.
- * @return array
+ * @param array<string, mixed>                                                              $args    Key-value array of WP_Query args.
+ * @param WP_REST_Request<array{context:string, exclude:int|null, parent_exclude:int|null}> $request The REST request object.
+ * @return array<string, mixed>
  */
 function rest_query( array $args, WP_REST_Request $request ): array {
 	// (Optional) Target only requests with context=edit or specific parameters.
@@ -494,9 +494,9 @@ function rest_query( array $args, WP_REST_Request $request ): array {
  * By intercepting the request before it executes, you can transparently forward it to the gatherpress_play controller
  * without needing an HTTP redirect roundtrip (which can fail or cause issues in REST clients/Gutenberg apiFetch).
  *
- * @param mixed           $result  Response to return instead of executing handler.
- * @param WP_REST_Server  $server  REST server instance.
- * @param WP_REST_Request $request Request used to generate the response.
+ * @param mixed                                $result  Response to return instead of executing handler.
+ * @param WP_REST_Server                       $server  REST server instance.
+ * @param WP_REST_Request<array{mixed, mixed}> $request Request used to generate the response.
  * @return mixed
  */
 function gatherpress_reroute_play_sub_to_play_rest( $result, $server, $request ) {
