@@ -278,7 +278,7 @@ function get_sub_type_args( string $parent_post_type ): array {
 			'search_items'             => __( 'Search Subsites', 'theater-production-subsites' ),
 			'not_found'                => __( 'No Subsites found.', 'theater-production-subsites' ),
 			'not_found_in_trash'       => __( 'No Subsites found in Trash.', 'theater-production-subsites' ),
-			'parent_item_colon'        => __( 'Parent Subsites:', 'theater-production-subsites' ),
+			'parent_item_colon'        => '',
 			'all_items'                => __( 'All Subsites', 'theater-production-subsites' ),
 			'archives'                 => __( 'Subsite Archives', 'theater-production-subsites' ),
 			'attributes'               => __( 'Subsite Attributes', 'theater-production-subsites' ),
