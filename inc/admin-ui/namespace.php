@@ -12,6 +12,8 @@ use Figuren_Theater\Production_Subsites\Registration;
 use WP_Post;
 use WP_Post_Type;
 use WP_Query;
+use WP_REST_Server;
+use WP_REST_Request;
 use function __;
 use function add_action;
 use function add_submenu_page;
@@ -64,6 +66,10 @@ function load_plugin(): void {
 	
 	// Handle the "New Production-Subsite" Action.
 	add_action( 'admin_action_' . ACTION, __NAMESPACE__ . '\\admin_action_subsite_as_draft' );
+
+	// Modify some of WP cores REST requests for gatherpress_play_sub to gatherpress_play if the post belongs to the parent CPT.
+	add_filter( 'rest_gatherpress_play_sub_query', __NAMESPACE__ . '\\rest_query', 10, 2 );
+	add_filter( 'rest_pre_dispatch', __NAMESPACE__ . '\\gatherpress_reroute_play_sub_to_play_rest', 10, 3 );
 
 	if ( ! is_admin() ) {
 		return;
@@ -458,4 +464,63 @@ function filter_posts_by_parent_query( WP_Query $query ): void {
 			$query->set( 'post_parent', $parent_id );
 		}
 	}
+}
+
+/**
+ * Modify WP_Query arguments for gatherpress_play_sub REST requests.
+ *
+ * @param array<string, mixed>                                                              $args    Key-value array of WP_Query args.
+ * @param WP_REST_Request<array{context:string, exclude:int|null, parent_exclude:int|null}> $request The REST request object.
+ * @return array<string, mixed>
+ */
+function rest_query( array $args, WP_REST_Request $request ): array {
+	// (Optional) Target only requests with context=edit or specific parameters.
+	if ( 'edit' === $request->get_param( 'context' ) && ! empty( $request->get_param( 'exclude' ) ) && ! empty( $request->get_param( 'parent_exclude' ) ) ) {
+		// Change post type to use the parent instead.
+		$args['post_type'] = 'gatherpress_play';
+	}
+
+	return $args;
+}
+
+
+
+/**
+ * Internally re-dispatch REST requests for gatherpress_play_sub to gatherpress_play if the post belongs to the parent CPT.
+ * 
+ * The best way to handle this in WordPress is an internal REST re-dispatch using the rest_pre_dispatch filter.
+ * When Gutenberg / the Block Editor tries to resolve the parent post entity, it calls /wp/v2/gatherpress_play_sub/4072.
+ * Because post 4072 belongs to gatherpress_play and not gatherpress_play_sub, WordPress returns a 404 Invalid post ID.
+ * By intercepting the request before it executes, you can transparently forward it to the gatherpress_play controller
+ * without needing an HTTP redirect roundtrip (which can fail or cause issues in REST clients/Gutenberg apiFetch).
+ *
+ * @param mixed                                $result  Response to return instead of executing handler.
+ * @param WP_REST_Server                       $server  REST server instance.
+ * @param WP_REST_Request<array{mixed, mixed}> $request Request used to generate the response.
+ * @return mixed
+ */
+function gatherpress_reroute_play_sub_to_play_rest( $result, $server, $request ) {
+	$route = $request->get_route();
+
+	// Match single item endpoint: /wp/v2/gatherpress_play_sub/{id} .
+	if ( preg_match( '#^/wp/v2/gatherpress_play_sub/(\d+)$#', $route, $matches ) ) {
+		$post_id = (int) $matches[1];
+		$post    = get_post( $post_id );
+
+		// If the requested post is actually a 'gatherpress_play', re-dispatch to its endpoint.
+		if ( $post && 'gatherpress_play' === $post->post_type ) {
+			$new_request = new WP_REST_Request( $request->get_method(), '/wp/v2/gatherpress_play/' . $post_id );
+			$new_request->set_query_params( $request->get_query_params() );
+			$new_request->set_headers( $request->get_headers() );
+
+			if ( in_array( $request->get_method(), array( 'POST', 'PUT', 'PATCH' ), true ) ) {
+				$new_request->set_body_params( $request->get_body_params() );
+			}
+
+			// Execute and return the response from the 'gatherpress_play' controller.
+			return $server->dispatch( $new_request );
+		}
+	}
+
+	return $result;
 }

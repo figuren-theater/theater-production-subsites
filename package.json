@@ -40,7 +40,7 @@
 		"lint:md:docs": "wp-scripts lint-md-docs",
 		"lint:php": "vendor/bin/phpcs",
 		"lint:php:fix": "vendor/bin/phpcbf",
-		"lint:php:stan": "vendor/bin/phpstan analyze",
+		"lint:phpstan": "vendor/bin/phpstan analyze",
 		"lint:pkg-json": "wp-scripts lint-pkg-json --ignorePath .gitignore",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
