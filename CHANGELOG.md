@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/figuren-theater/theater-production-subsites/compare/0.3.0...HEAD)
+## [Unreleased](https://github.com/figuren-theater/theater-production-subsites/compare/0.3.1...HEAD)
+
+## [0.3.1](https://github.com/figuren-theater/theater-production-subsites/compare/0.3.0...0.3.1) - 2026-09-10
+
+### 🐛 Fixed
+
+- Fix/adjust admin UI ([#40](https://github.com/figuren-theater/theater-production-subsites/pull/40))
 
 ## [0.3.0](https://github.com/figuren-theater/theater-production-subsites/compare/0.2.0...0.3.0) - 2026-09-09
 
