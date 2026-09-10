@@ -94,8 +94,6 @@ function load_plugin(): void {
 	add_action( 'pre_get_posts', __NAMESPACE__ . '\\filter_posts_by_parent_query' );
 	// 3. Remove the "Months" dropdown from the post list table.
 	add_filter( 'disable_months_dropdown', __NAMESPACE__ . '\\filter_disable_months_dropdown', 10, 2 );
-
-
 }
 
 
@@ -475,7 +473,7 @@ function filter_posts_by_parent_query( WP_Query $query ): void {
  * @param WP_REST_Request $request The REST request object.
  * @return array
  */
-function rest_query( array $args, WP_REST_Request $request ) :array {
+function rest_query( array $args, WP_REST_Request $request ): array {
 	// (Optional) Target only requests with context=edit or specific parameters.
 	if ( 'edit' === $request->get_param( 'context' ) && ! empty( $request->get_param( 'exclude' ) ) && ! empty( $request->get_param( 'parent_exclude' ) ) ) {
 		// Change post type to use the parent instead.
@@ -504,7 +502,7 @@ function rest_query( array $args, WP_REST_Request $request ) :array {
 function gatherpress_reroute_play_sub_to_play_rest( $result, $server, $request ) {
 	$route = $request->get_route();
 
-	// Match single item endpoint: /wp/v2/gatherpress_play_sub/{id}
+	// Match single item endpoint: /wp/v2/gatherpress_play_sub/{id} .
 	if ( preg_match( '#^/wp/v2/gatherpress_play_sub/(\d+)$#', $route, $matches ) ) {
 		$post_id = (int) $matches[1];
 		$post    = get_post( $post_id );
